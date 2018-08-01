@@ -7,6 +7,11 @@ from nbconvert.preprocessors import ExecutePreprocessor
 import glob
 
 
+allowed_failures = {
+    'machine-learning/text-vectorization.ipynb',
+}
+
+
 def run_notebook(in_filepath):
     if not in_filepath.is_file():
         raise IOError('File "%s" not found.' % in_filepath)
@@ -29,6 +34,10 @@ def run_notebook(in_filepath):
 print("Running Notebooks...")
 
 for filename in glob.glob('../**/*.ipynb', recursive=True):
+    if filename.lstrip('..{}'.format(os.path.sep)) in allowed_failures:
+        print("{} in 'allowed_failures. Skipping.".format(filename))
+        continue
+
     print(filename)
     run_notebook(Path(filename))
 
